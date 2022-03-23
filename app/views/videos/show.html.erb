@@ -1,0 +1,70 @@
+<head>
+    <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
+</head>
+<body>
+<%= render partial: '/navbar' %>
+<h1>Hello, Daily folks!</h1>
+<h3>Your embedded Daily room.<h3/>
+    <script>
+        let callFrame = window.DailyIframe.createFrame({
+            iframeStyle: {
+                position: 'fixed',
+                border: '1px solid black',
+                width: '375px',
+                height: '450px',
+                right: '1em',
+                bottom: '1em',
+            }
+        });
+        callFrame.join({
+            url: "<%= @url %>",
+            showLeaveButton: true,
+        });
+
+        var session_id;
+        callFrame
+            .on('joined-meeting', (event) => {
+                console.log('joined-meeting event', event);
+                callFrame.iframe().style.visibility = 'visible';
+                callFrame.getMeetingSession().then(
+                    (result) => {
+                        session_id = result.meetingSession.id
+                    },
+                    (error) => {
+                        // in an ideal world, we'd log this somewhere visible so we can investigate if it persists
+                       console.log(error);
+                    }
+                ); 
+            })
+            .on('left-meeting', (event) => {
+                clearInterval(interval);
+                let data = Object.assign(stats, {"room_name": "<%=@room_name%>", "session_id": session_id});
+                console.log("left-meeting data");
+                console.log(data);
+                $.ajax({
+                    url: "/metrics",
+                    type: "post",
+                    data: data,
+                    success: function(data) {console.log("success")},
+                    error: function(data) {console.log("failure")}// ideally we'd be logging this
+                })
+            });
+        var stats;
+        // every 10 seconds, get new data from the network stats
+        // i don't love this -- tried using the event `left-meeting`, but didn't have the callframe object i think
+        // also if someone starts and leaves within 5 seconds we get no data--why don't we have a REST api for this?
+        const interval = setInterval(function() {
+            callFrame.getNetworkStats().then(
+                (result) => {
+                    stats = result;
+                    console.log(result);
+                },
+                (error) => {
+                    // in an ideal world, we'd log this somewhere visible so we can investigate if it persists
+                   console.log(error);
+                }
+            );
+        }, 5000);
+    </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+</body>

@@ -1,0 +1,15 @@
+<body>
+<%= render partial: '/navbar' %>
+<h1>Hello, Daily folks!</h1>
+<h3>Let's create a meeting!</h3>
+<form method="post" action="/videos">
+  <label for="apikey">API Key</label>
+  <input type="text" name="apikey" id="apikey">
+
+  <label for="room_name">Room Name</label>
+  <input type="text" name="room_name" id="room_name">
+  <p>&#9432; Room names limited to 36 characters and must only contain: A-Z, a-z, 0-9, -, _</p>
+
+  <input type="submit" value="Create a room!">
+</form>
+</body>
