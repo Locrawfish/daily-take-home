@@ -1,0 +1,31 @@
+<head>
+    <script crossorigin src="https://unpkg.com/@daily-co/daily-js">
+    </script>
+</head>
+<body>
+<%= render partial: '/navbar' %>
+<h1>Metrics</h1>
+<div>
+<h3>Sessions By Name</h3>
+  <form method="get" action="/sessions">
+    <label for="room_name">Room Name</label>
+    <input type="text" name="room_name" id="room_name">
+    <p>&#9432; Room names limited to 36 characters and must only contain: A-Z, a-z, 0-9, -, _</p>
+    <input type="submit" value="Find sessions by room name">
+  </form>
+</div>
+<div>
+<h3>Participant Time</h3>
+  <form method="get" action="/participant_time">
+    <label for="apikey">API Key</label>
+    <input type="text" name="apikey" id="apikey">
+    <label for="room_name">Room Name</label>
+    <input type="text" name="room_name" id="room_name">
+    <label for="start_time">Start Time</label>
+    <input type="datetime-local" name="start_time" id="start_time">
+    <label for="end_time">End Time</label>
+    <input type="datetime-local" name="end_time" id="end_time">
+    <input type="submit" value="Get total participant time">
+  </form>
+</div>
+<body>
