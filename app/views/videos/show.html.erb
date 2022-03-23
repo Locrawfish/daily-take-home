@@ -24,7 +24,6 @@
         var session_id;
         callFrame
             .on('joined-meeting', (event) => {
-                console.log('joined-meeting event', event);
                 callFrame.iframe().style.visibility = 'visible';
                 callFrame.getMeetingSession().then(
                     (result) => {
@@ -39,8 +38,6 @@
             .on('left-meeting', (event) => {
                 clearInterval(interval);
                 let data = Object.assign(stats, {"room_name": "<%=@room_name%>", "session_id": session_id});
-                console.log("left-meeting data");
-                console.log(data);
                 $.ajax({
                     url: "/metrics",
                     type: "post",
@@ -53,11 +50,11 @@
         // every 10 seconds, get new data from the network stats
         // i don't love this -- tried using the event `left-meeting`, but didn't have the callframe object i think
         // also if someone starts and leaves within 5 seconds we get no data--why don't we have a REST api for this?
+        // I'd love to pair with someone to see how to do this better.
         const interval = setInterval(function() {
             callFrame.getNetworkStats().then(
                 (result) => {
                     stats = result;
-                    console.log(result);
                 },
                 (error) => {
                     // in an ideal world, we'd log this somewhere visible so we can investigate if it persists
