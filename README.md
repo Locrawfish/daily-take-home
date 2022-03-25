@@ -7,6 +7,11 @@ Hi folks! Thanks for taking a look! This Rails project does a few things based o
 * Get total participant time based on a time period
 
 
+### Limitations of the design
+* Requires users to join the call and stay on for at least 5 seconds. 
+* This wouldn’t scale well.
+
+
 ## How to Run
 * Pull down this repo
 
